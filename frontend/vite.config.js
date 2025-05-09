@@ -39,6 +39,6 @@ export default defineConfig({
   preview: {
     host: '0.0.0.0',
     port: parseInt(process.env.PORT) || 5173,
-    allowedHosts: ['omvad-1.onrender.com']
+    allowedHosts: ['omvad-2.onrender.com']
   }
 });
