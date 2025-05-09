@@ -5,7 +5,7 @@ import axios from 'axios';
  * @type {import('axios').AxiosInstance}
  */
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'https://omvad.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
