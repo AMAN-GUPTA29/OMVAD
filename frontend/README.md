@@ -7,7 +7,7 @@ The frontend application for Link Saver, built with React and Tailwind CSS.
 - Node.js (v14 or higher)
 - npm (v6 or higher)
 
-## Environment Variables
+
 
 
 

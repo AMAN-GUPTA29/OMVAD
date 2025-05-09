@@ -26,7 +26,7 @@ A modern web application that helps users save and organize their bookmarks with
 - Express
 - MongoDB
 - JWT Authentication
-- OpenAI API
+- Jina AI
 
 ## Project Structure
 
