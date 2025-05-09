@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axios';
 
 /**
  * Login component for user authentication
@@ -15,22 +15,33 @@ const Login = ({ setIsAuthenticated }) => {
     password: '',
   });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isLoading) return; // Prevent multiple submissions
+    
     setError('');
+    setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+      const response = await api.post('/users/login', formData);
       localStorage.setItem('token', response.data.token);
       setIsAuthenticated(true);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      // Clear password on error
+      setFormData(prev => ({ ...prev, password: '' }));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,7 +54,7 @@ const Login = ({ setIsAuthenticated }) => {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           {error && (
             <div className="rounded-md bg-red-50 p-4 dark:bg-red-900/50">
               <div className="text-sm text-red-700 dark:text-red-200">{error}</div>
@@ -64,6 +75,7 @@ const Login = ({ setIsAuthenticated }) => {
                 value={formData.email}
                 onChange={handleChange}
                 className="input"
+                disabled={isLoading}
               />
             </div>
           </div>
@@ -82,13 +94,18 @@ const Login = ({ setIsAuthenticated }) => {
                 value={formData.password}
                 onChange={handleChange}
                 className="input"
+                disabled={isLoading}
               />
             </div>
           </div>
 
           <div>
-            <button type="submit" className="btn btn-primary w-full">
-              Sign in
+            <button 
+              type="submit" 
+              className="btn btn-primary w-full"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
         </form>

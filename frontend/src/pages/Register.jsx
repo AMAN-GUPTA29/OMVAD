@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/axios';
 
 /**
  * Register component for user registration
@@ -25,9 +25,10 @@ const Register = ({ setIsAuthenticated }) => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users', formData);
-      // After successful registration, redirect to login
-      navigate('/login');
+      const response = await api.post('/users', formData);
+      localStorage.setItem('token', response.data.token);
+      setIsAuthenticated(true);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     }

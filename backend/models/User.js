@@ -26,20 +26,6 @@ const userSchema = new mongoose.Schema({
 });
 
 /**
- * Hashes the password before saving the user
- * @param {Function} next - The next middleware function
- * @returns {Promise<void>}
- * @description Hashes the password before saving the user
- */
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) {
-        next();
-    }
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-});
-
-/**
  * Compares the entered password with the user's password
  * @param {string} enteredPassword - The password entered by the user
  * @returns {Promise<boolean>} True if the passwords match, false otherwise

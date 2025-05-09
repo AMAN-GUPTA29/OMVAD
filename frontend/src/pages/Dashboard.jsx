@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { PlusIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import api from '../utils/axios';
 
 /**
  * Dashboard component for managing bookmarks with drag-and-drop reordering
@@ -27,11 +27,7 @@ const Dashboard = () => {
 
   const fetchBookmarks = async (page) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/bookmarks?page=${page}&limit=10`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const response = await api.get(`/bookmarks?page=${page}&limit=10`);
       setBookmarks(response.data.bookmarks);
       setTotalPages(response.data.totalPages);
       setTotalBookmarks(response.data.totalBookmarks);
@@ -53,14 +49,7 @@ const Dashboard = () => {
         return;
       }
 
-      const response = await axios.post(
-        'http://localhost:5000/api/bookmarks',
-        { url },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-
+      await api.post('/bookmarks', { url });
       fetchBookmarks(currentPage);
       setUrl('');
     } catch (err) {
@@ -75,11 +64,7 @@ const Dashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/bookmarks/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      await api.delete(`/bookmarks/${id}`);
       fetchBookmarks(currentPage);
     } catch (error) {
       setError('Failed to delete bookmark');
@@ -96,13 +81,7 @@ const Dashboard = () => {
     setBookmarks(items);
 
     try {
-      await axios.put(
-        'http://localhost:5000/api/bookmarks/reorder',
-        { bookmarks: items },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        }
-      );
+      await api.put('/bookmarks/reorder', { bookmarks: items });
     } catch (error) {
       setError('Failed to update bookmark order');
       fetchBookmarks(currentPage);
@@ -203,7 +182,19 @@ const Dashboard = () => {
                                     {...provided.dragHandleProps}
                                     className="cursor-grab active:cursor-grabbing p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                                   >
-                                    <LinkIcon className="h-6 w-6 text-gray-400" />
+                                    <svg 
+                                      className="h-6 w-6 text-gray-400" 
+                                      fill="none" 
+                                      viewBox="0 0 24 24" 
+                                      stroke="currentColor"
+                                    >
+                                      <path 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        strokeWidth={2} 
+                                        d="M4 8h16M4 16h16"
+                                      />
+                                    </svg>
                                   </div>
                                   {bookmark.favicon && (
                                     <img src={bookmark.favicon} alt="" className="h-6 w-6" />

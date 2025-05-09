@@ -5,7 +5,7 @@ import axios from 'axios';
  * @type {import('axios').AxiosInstance}
  */
 const api = axios.create({
-  baseURL: 'https://omvad.onrender.com/api',
+  baseURL: 'http://localhost:5000/api',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -40,7 +40,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      // Instead of redirecting, just reject the promise
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }
