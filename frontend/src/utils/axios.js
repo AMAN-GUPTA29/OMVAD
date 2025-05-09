@@ -4,8 +4,8 @@ import axios from 'axios';
  * Axios instance with base configuration
  * @type {import('axios').AxiosInstance}
  */
-const instance = axios.create({
-  baseURL: 'https://omvad.onrender.com/api',
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,7 +16,7 @@ const instance = axios.create({
  * @param {import('axios').AxiosRequestConfig} config - The request configuration
  * @returns {import('axios').AxiosRequestConfig} The modified request configuration
  */
-instance.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -35,7 +35,7 @@ instance.interceptors.request.use(
  * @param {import('axios').AxiosError} error - The error object
  * @returns {Promise<import('axios').AxiosResponse>} The response or rejected promise
  */
-instance.interceptors.response.use(
+api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
@@ -46,4 +46,4 @@ instance.interceptors.response.use(
   }
 );
 
-export default instance; 
+export default api; 
