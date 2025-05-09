@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { PlusIcon, TrashIcon, Bars3Icon } from '@heroicons/react/24/outline';
+import { PlusIcon, TrashIcon, LinkIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -203,7 +203,7 @@ const Dashboard = () => {
                                     {...provided.dragHandleProps}
                                     className="cursor-grab active:cursor-grabbing p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
                                   >
-                                    <Bars3Icon className="h-6 w-6 text-gray-400" />
+                                    <LinkIcon className="h-6 w-6 text-gray-400" />
                                   </div>
                                   {bookmark.favicon && (
                                     <img src={bookmark.favicon} alt="" className="h-6 w-6" />
